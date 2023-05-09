@@ -1,0 +1,75 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2709
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 Sub multiple_year_stock()\
+\
+    For Each ws In Worksheets\
+\
+    'Create Coloumns\
+    ws.Cells(1, 9) = "Ticker"\
+    ws.Cells(1, 10) = "Yearly Change"\
+    ws.Multiple_year_stock vba challenege 2 Cells(1, 11) = "Percent Change"\
+    ws.Cells(1, 12) = "Total Stock Volume"\
+\
+    Dim a, b, i, j, LastRow As Long\
+    LastRow = ws.Cells(Rows.Count, 1).End(xlUp).Row\
+    j = 2\
+\
+    'Ticker Change\
+\
+    For i = 2 To LastRow\
+     If ws.Cells(i, 1).Value = ws.Cells(i + 1, 1).Value Then\
+     \
+     'Ticker change counter\
+          If a = 0 Then\
+              a = i\
+              ws.Cells(j, 9) = ws.Cells(a, 1)\
+          End If\
+          \
+     Else\
+     'Counter for last row of stocks in ticker\
+          If a > 0 And b = 0 Then\
+              b = i + 1\
+          End If\
+          \
+     End If\
+     \
+     If b > 0 And a > 0 Then\
+     \
+        If ws.Cells(b - 1, 6) > 0 And ws.Cells(a, 3) > 0 Then\
+        \
+        'Yearly change is closing -opening\
+            ws.Cells(j, 10) = ws.Cells(b - 1, 6) - ws.Cells(a, 3)\
+            \
+        'Percent changeis closing -opening/opening\
+            ws.Cells(j, 11) = (ws.Cells(b - 1, 6) - ws.Cells(a, 3)) / ws.Cells(a, 3)\
+\
+        Else\
+             ws.Cells(j, 10) = 0\
+             ws.Cells(j, 11) = 0\
+            End If\
+\
+    'Total stock volume of the stock (total volume of that particular tickers)\
+        total_volume = Range(ws.Cells(a, 7), ws.Cells(b - 1, 7))\
+        ws.Cells(j, 12) = WorksheetFunction.Sum(total_volume)\
+        \
+        'Reset\
+         a = 0\
+         b = 0\
+         j = j + 1\
+         \
+    End If\
+    Next i\
+    \
+a = 0\
+b = 0\
+\
+\
+Next ws\
+End Sub\
+\
+}
